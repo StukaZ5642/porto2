@@ -4,7 +4,7 @@ import { content, Lang } from "./content";
 
 export default function Home() {
   const [lang, setLang] = useState<Lang>("id");
-
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const saved = localStorage.getItem("lang");
     if (saved === "id" || saved === "en") setLang(saved);
@@ -27,31 +27,59 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-slate-800">
       <header className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <nav className="flex flex-wrap gap-4 text-sm">
-            {menu.map((m) => (
-              <a key={m.id} href={`#${m.id}`} className="hover:text-blue-600">
-                {m.label}
-              </a>
-            ))}
-          </nav>
-          <div className="text-sm">
-            <button
-              onClick={() => pilihBahasa("id")}
-              className={lang === "id" ? "font-bold text-blue-600" : ""}
-            >
-              ID
-            </button>
-            {" | "}
-            <button
-              onClick={() => pilihBahasa("en")}
-              className={lang === "en" ? "font-bold text-blue-600" : ""}
-            >
-              EN
-            </button>
-          </div>
-        </div>
-      </header>
+  <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
+    {/* Menu untuk layar lebar */}
+    <nav className="hidden gap-4 text-sm md:flex">
+      {menu.map((m) => (
+        <a key={m.id} href={`#${m.id}`} className="hover:text-blue-600">
+          {m.label}
+        </a>
+      ))}
+    </nav>
+
+    {/* Tombol garis tiga untuk HP */}
+    <button
+      onClick={() => setMenuOpen(!menuOpen)}
+      aria-label="Menu"
+      className="text-2xl leading-none md:hidden"
+    >
+      {menuOpen ? "✕" : "☰"}
+    </button>
+
+    {/* Pilihan bahasa */}
+    <div className="text-sm">
+      <button
+        onClick={() => pilihBahasa("id")}
+        className={lang === "id" ? "font-bold text-blue-600" : ""}
+      >
+        ID
+      </button>
+      {" | "}
+      <button
+        onClick={() => pilihBahasa("en")}
+        className={lang === "en" ? "font-bold text-blue-600" : ""}
+      >
+        EN
+      </button>
+    </div>
+  </div>
+
+  {/* Daftar menu yang terbuka di HP */}
+  {menuOpen && (
+    <nav className="flex flex-col border-t px-4 py-2 text-sm md:hidden">
+      {menu.map((m) => (
+        <a
+          key={m.id}
+          href={`#${m.id}`}
+          onClick={() => setMenuOpen(false)}
+          className="py-2 hover:text-blue-600"
+        >
+          {m.label}
+        </a>
+      ))}
+    </nav>
+  )}
+</header>
 
       <main className="mx-auto max-w-4xl px-4">
         <section id="beranda" className="scroll-mt-16 py-20">
